@@ -24,31 +24,37 @@ defmodule SpartanKickWeb.Router do
     IO.inspect(body)
 
     # Get MEME
-    meme_body = URI.encode_query(%{
-      "template_id" => 1650385,
-      "text1" => "This is Sparta",
-      "text0" => String.trim(body["text"]),
-      "username" => System.get_env("IMGFLIP_USERNAME"),
-      "password" => System.get_env("IMGFLIP_PASSWORD")
-    })
-    {:ok, meme_response} = HTTPoison.post(
-      "https://api.imgflip.com/caption_image",
-      meme_body,
-      %{"Content-type" => "application/x-www-form-urlencoded"}
-    )
+    meme_body =
+      URI.encode_query(%{
+        "template_id" => 1_650_385,
+        "text1" => "This is Sparta",
+        "text0" => String.trim(body["text"]),
+        "username" => System.get_env("IMGFLIP_USERNAME"),
+        "password" => System.get_env("IMGFLIP_PASSWORD")
+      })
+
+    {:ok, meme_response} =
+      HTTPoison.post(
+        "https://api.imgflip.com/caption_image",
+        meme_body,
+        %{"Content-type" => "application/x-www-form-urlencoded"}
+      )
+
     meme_response_body = Poison.decode!(meme_response.body)
 
-
     # Send Meme to response_url
-    slack_body = Poison.encode!(%{
-      "response_type" => "in_channel",
-      "text" => meme_response_body["data"]["url"]
-    })
+    slack_body =
+      Poison.encode!(%{
+        "response_type" => "in_channel",
+        "text" => meme_response_body["data"]["url"]
+      })
+
     HTTPoison.post(
       response_url,
       slack_body,
       %{"Content-type" => "application/json"}
     )
+
     conn
   end
 

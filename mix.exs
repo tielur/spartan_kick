@@ -25,7 +25,6 @@ defmodule SpartanKick.MixProject do
       {:plug, "~> 1.6"},
       {:poison, "~> 4.0"},
       {:httpoison, "~> 1.3"}
-
     ]
   end
 end
