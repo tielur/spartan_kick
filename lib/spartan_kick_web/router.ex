@@ -21,7 +21,8 @@ defmodule SpartanKickWeb.Router do
     conn = send_resp(conn, 200, "")
 
     response_url = body["response_url"]
-    IO.inspect(body)
+    IO.inspect(conn.req_headers, label: "headers")
+    IO.inspect(body, label: "body")
 
     # Get MEME
     meme_body =
